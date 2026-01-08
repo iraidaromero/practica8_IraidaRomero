@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Benchmark JQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: sans-serif;
+            user-select: none;
+        }
+
+        #game-area {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+
+        h1 { font-size: 80px; margin: 0; }
+        h3 { font-size: 30px; margin-top: 10px; font-weight: normal; }
+        
+        .state-initial { background-color: #2b87d1; }
+        .state-waiting { background-color: #ce2636; }
+        .state-now { background-color: #4bdb6a; }
+    </style>
+</head>
+<body>
+
+    <div id="game-area" class="state-initial">
+        <div id="message-box">
+            <h1 id="main-text">Test de Reflejos</h1>
+            <h3 id="sub-text">Haz click en cualquier lugar para empezar</h3>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let startTime = 0;
+            let timeoutId = null;
+            let currentState = 'initial';
+
+            const $area = $('#game-area');
+            const $mainText = $('#main-text');
+            const $subText = $('#sub-text');
+
+            $area.click(function() {
+                
+                if (currentState === 'initial' || currentState === 'result') {
+                    startWaiting();
+                } 
+                else if (currentState === 'waiting') {
+                    failedTooEarly();
+                } 
+                else if (currentState === 'now') {
+                    finishGame();
+                }
+            });
+
+            function startWaiting() {
+                currentState = 'waiting';
+                $area.removeClass().addClass('state-waiting');
+                $mainText.text('Espera al verde...');
+                $subText.text('');
+
+                const randomTime = Math.floor(Math.random() * 3000) + 2000;
+
+                timeoutId = setTimeout(function() {
+                    setGreenScreen();
+                }, randomTime);
+            }
+
+            function setGreenScreen() {
+                currentState = 'now';
+                $area.removeClass().addClass('state-now');
+                $mainText.text('¡CLICK!');
+                $subText.text('');
+                startTime = Date.now();
+            }
+
+            function finishGame() {
+                const endTime = Date.now();
+                const reactionTime = endTime - startTime;
+                
+                currentState = 'result';
+                $area.removeClass().addClass('state-initial');
+                
+                $mainText.text(reactionTime + ' ms');
+                $subText.text('Haz click para intentar de nuevo');
+            }
+
+            function failedTooEarly() {
+                clearTimeout(timeoutId);
+                currentState = 'result';
+                $area.removeClass().addClass('state-initial');
+                
+                $mainText.text('¡Muy pronto!');
+                $subText.text('Haz click para intentar de nuevo');
+            }
+        });
+    </script>
+</body>
+</html>

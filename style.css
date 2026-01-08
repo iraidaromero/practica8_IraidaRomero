@@ -1,0 +1,31 @@
+body {
+    text-align: center;
+}
+
+h1 {
+    margin: 20px 0;
+}
+
+.grid-container {
+    width: 300px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.grid-item {
+    text-decoration: none;
+    color: white;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.grid-item:hover {
+    opacity: 0.85;
+}
+
+.color {
+    background-color: #e26bd4;
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Elementos JS</title>
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f4f4f4;
+            transition: background-color 0.5s;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .elements-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            margin: 2px;
+            color: white;
+        }
+
+        .btn-add { background-color: #28a745; }
+        .btn-reset { background-color: #dc3545; }
+        .btn-change { background-color: #007bff; width: 100%; margin-bottom: 5px; }
+        .btn-delete { background-color: #6c757d; width: 100%; }
+        
+        h1, h2 { text-align: center; color: #333; }
+    </style>
+</head>
+<body>
+
+    <h1>Gestión de Elementos Js</h1>
+
+    <div class="controls">
+        <label for="bgColor">Selecciona un color:</label>
+        <input type="color" id="bgColor" value="#ffffff">
+        
+        <button id="btnChangeGlobal" class="btn-change" style="width: auto;">Cambiar color de fondo</button>
+        <button id="btnAdd" class="btn-add">Añadir más elementos</button>
+        <button id="btnReset" class="btn-reset">Resetear</button>
+    </div>
+
+    <h2>Elementos</h2>
+    <div id="elementsList" class="elements-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const imagenes = ['img1.webp', 'img2.webp']; 
+            let currentColor = "#ffffff";
+
+            const container = document.getElementById('elementsList');
+            const btnAdd = document.getElementById('btnAdd');
+            const btnChangeGlobal = document.getElementById('btnChangeGlobal');
+            const btnReset = document.getElementById('btnReset');
+            const colorInput = document.getElementById('bgColor');
+
+            function getRandomImage() {
+                const randomIndex = Math.floor(Math.random() * imagenes.length);
+                return imagenes[randomIndex];
+            }
+
+            function createCard() {
+                const img = getRandomImage();
+                const html = `
+                    <div class="card" style="background-color: ${currentColor};">
+                        <img src="${img}" alt="Imagen Aleatoria">
+                        <button class="btn-change change-img">Cambiar</button>
+                        <button class="btn-delete delete-card">Borrar</button>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            }
+
+            btnAdd.addEventListener('click', createCard);
+
+            btnChangeGlobal.addEventListener('click', () => {
+                currentColor = colorInput.value;
+                
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => {
+                    card.style.backgroundColor = currentColor;
+                });
+
+                document.body.style.backgroundColor = currentColor + '33';
+            });
+
+            btnReset.addEventListener('click', () => {
+                container.innerHTML = '';
+                currentColor = "#ffffff";
+                document.body.style.backgroundColor = '#f4f4f4';
+                colorInput.value = '#ffffff';
+                
+                createCard();
+                createCard();
+            });
+
+            container.addEventListener('click', (e) => {
+                if (e.target.classList.contains('change-img')) {
+                    const img = e.target.parentElement.querySelector('img');
+                    img.src = getRandomImage();
+                }
+                else if (e.target.classList.contains('delete-card')) {
+                    const card = e.target.closest('.card');
+                    card.remove();
+                }
+            });
+
+            createCard();
+            createCard();
+        });
+    </script>
+</body>
+</html>
