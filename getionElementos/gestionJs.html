@@ -2,30 +2,87 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Elementos JS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            padding: 20px;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
             background-color: #f4f4f4;
-            transition: background-color 0.5s;
         }
 
+        /* BANNER STICKY */
+        h1 {
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            text-align: center;
+            color: #333;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* PANEL LATERAL */
         .controls {
+            width: 260px;
             background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            border-right: 1px solid #ddd;
             display: flex;
+            flex-direction: column;
             gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 80px;
+            align-self: flex-start;
         }
 
+        .controls label {
+            font-size: 14px;
+        }
+
+        .controls input[type="color"] {
+            width: 100%;
+            height: 40px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .controls button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn-add { background-color: #28a745; }
+        .btn-reset { background-color: #dc3545; }
+        .btn-change { background-color: #007bff; }
+
+        /* ZONA PRINCIPAL */
+        .main {
+            flex: 1;
+            padding: 25px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        /* GRID TARJETAS */
         .elements-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
         }
 
@@ -37,6 +94,9 @@
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: background-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card img {
@@ -46,38 +106,40 @@
             margin-bottom: 10px;
         }
 
-        button {
-            cursor: pointer;
-            padding: 8px 12px;
+        .card button {
+            margin-top: 5px;
+            padding: 8px;
             border: none;
             border-radius: 4px;
-            margin: 2px;
             color: white;
+            cursor: pointer;
         }
 
-        .btn-add { background-color: #28a745; }
-        .btn-reset { background-color: #dc3545; }
-        .btn-change { background-color: #007bff; width: 100%; margin-bottom: 5px; }
-        .btn-delete { background-color: #6c757d; width: 100%; }
-        
-        h1, h2 { text-align: center; color: #333; }
+        .card .btn-change { background-color: #007bff; }
+        .card .btn-delete { background-color: #6c757d; }
     </style>
 </head>
 <body>
 
-    <h1>Gestión de Elementos Js</h1>
+    <h1>Gestión de Elementos JS</h1>
 
-    <div class="controls">
-        <label for="bgColor">Selecciona un color:</label>
-        <input type="color" id="bgColor" value="#ffffff">
-        
-        <button id="btnChangeGlobal" class="btn-change" style="width: auto;">Cambiar color de fondo</button>
-        <button id="btnAdd" class="btn-add">Añadir más elementos</button>
-        <button id="btnReset" class="btn-reset">Resetear</button>
+    <div class="layout">
+        <!-- PANEL LATERAL -->
+        <div class="controls">
+            <label for="bgColor">Selecciona un color:</label>
+            <input type="color" id="bgColor" value="#ffffff">
+
+            <button id="btnChangeGlobal" class="btn-change">Cambiar color de fondo</button>
+            <button id="btnAdd" class="btn-add">Añadir más elementos</button>
+            <button id="btnReset" class="btn-reset">Resetear</button>
+        </div>
+
+        <!-- ZONA PRINCIPAL -->
+        <div class="main">
+            <h2>Elementos</h2>
+            <div id="elementsList" class="elements-container"></div>
+        </div>
     </div>
-
-    <h2>Elementos</h2>
-    <div id="elementsList" class="elements-container"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
